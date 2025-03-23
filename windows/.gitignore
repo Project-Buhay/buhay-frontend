@@ -17,6 +17,6 @@ x86/
 !*.[Cc]ache/
 
 # Generated Plugins for Windows
-flutter/generated_plugin_registrant.c
+flutter/generated_plugin_registrant.cc
 flutter/generated_plugin_registrant.h
 flutter/generated_plugins.cmake
