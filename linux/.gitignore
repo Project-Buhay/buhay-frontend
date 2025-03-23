@@ -1,0 +1,6 @@
+flutter/ephemeral
+
+# Generated Plugins for Linux
+flutter/generated_plugin_registrant.c
+flutter/generated_plugin_registrant.h
+flutter/generated_plugins.cmake
