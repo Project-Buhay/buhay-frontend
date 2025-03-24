@@ -28,14 +28,14 @@ jobs:
       - name: Add FVM to PATH
         run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
       
-      - name: FVM Install Flutter 3.19.6
-        run: fvm install 3.19.6
+      # - name: FVM Install Flutter 3.19.6
+      #   run: fvm install 3.19.6
 
-      - name: Flutter Doctor for 3.19.6
-        run: fvm spawn 3.19.6 doctor --verbose
+      # - name: Flutter Doctor for 3.19.6
+      #   run: fvm spawn 3.19.6 doctor --verbose
 
-      - name: FVM Global 3.19.6
-        run: fvm global 3.19.6
+      # - name: FVM Global 3.19.6
+      #   run: fvm global 3.19.6
 
       - name: FVM Use 3.24.5
         run: fvm install 3.24.5 && fvm use 3.24.5
