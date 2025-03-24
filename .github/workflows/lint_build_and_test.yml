@@ -16,13 +16,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Dart
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y dart
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: "3.24.5"
 
-      - name: Install FVM
-        run: dart pub global activate fvm
+      - name: Install FVM via Flutter's built-in Dart
+        run: flutter pub global activate fvm
 
       - name: Add FVM to PATH
         run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
