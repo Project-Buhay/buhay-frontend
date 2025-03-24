@@ -79,7 +79,7 @@ jobs:
         run: |
           echo "APPWRITE_PROJECT_ID=${{ secrets.APPWRITE_PROJECT_ID }}" >> android/local.properties
           echo "GOOGLE_MAPS_API_KEY_1=${{ secrets.GOOGLE_MAPS_API_KEY_1 }}" >> android/local.properties
-          echo "SDK_REGISTRY_TOKEN=${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}" >> android/local.properties
+          echo "MAPBOX_DOWNLOADS_TOKEN=${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}" >> android/gradle.properties
 
       - name: Run Flutter tests
         run: fvm flutter test

@@ -10,7 +10,7 @@ allprojects {
             }
             credentials {
                 username = "mapbox"
-                password = project.findProperty("SDK_REGISTRY_TOKEN") ?: ""
+                password = project.findProperty("MAPBOX_DOWNLOADS_TOKEN") ?: ""
             }
         }
     }
