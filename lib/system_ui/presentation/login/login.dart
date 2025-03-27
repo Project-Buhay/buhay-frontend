@@ -99,6 +99,10 @@ class _LoginPageState extends State<LoginPage> {
           return;
         }
         else if (type == 3){
+          if (context.mounted) {
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pop();
+          }
           _onRedirect("Kindly use the WebApp version of Project Buhay");
           return;
         }
