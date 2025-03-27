@@ -1,3 +1,4 @@
+import 'package:buhay/system_ui/presentation/login/redirect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../../controller/login/form_controller.dart';
@@ -5,7 +6,6 @@ import '../constituent/map_dashboard.dart';
 import '../rescuer/rescuer_dashboard.dart';
 import '../../../features/map_error_dialog_box/presentation/map_error_dialog_box.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'wip.dart';
 import 'package:async/async.dart';
 
 class LoginPage extends StatefulWidget {
@@ -98,6 +98,10 @@ class _LoginPageState extends State<LoginPage> {
           }
           return;
         }
+        else if (type == 3){
+          _onRedirect("Kindly use the WebApp version of Project Buhay");
+          return;
+        }
       }
       // Pop DialogBox
       Navigator.of(context, rootNavigator: true).pop();
@@ -132,11 +136,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _onWIP() async {
+  void _onRedirect(message) async {
     if (mounted) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => WorkInProgress()),
+        MaterialPageRoute(builder: (context) => Redirect(message: message,)),
       );
     }
   }
@@ -221,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Color(0xFF87879D),
                     ),
                   ),
-                  onTap: () => _onWIP(),
+                  onTap: () => _onRedirect("Work in Progress..."),
                 )),
                 SizedBox(height: 10),
                 Center(
@@ -235,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                         color: Color(0xFF87879D),
                       ),
                     ),
-                    onTap: () => _onWIP(),
+                    onTap: () => _onRedirect("Work in Progress..."),
                   ),
                 )
               ],
