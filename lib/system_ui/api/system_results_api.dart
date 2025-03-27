@@ -104,12 +104,10 @@ class MapResultsAPI {
       },
     );
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return data;
-    } else {
-      return {};
-    }
+    // data includes detail if error else request_id
+    final data = json.decode(response.body);
+    data["status_code"] = response.statusCode;
+    return data;
   }
 
   Future<void> saveRouteRequest(SaveRoute body) async {
