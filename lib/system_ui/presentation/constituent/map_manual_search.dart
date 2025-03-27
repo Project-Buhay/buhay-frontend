@@ -231,9 +231,9 @@ class _MapManualSearchState extends State<MapManualSearch> {
           .mapResultsController.mapResultsApi
           .addRequest(request);
 
-      final status_code = response["status_code"];
+      final statusCode = response["status_code"];
 
-      if (status_code == 200){
+      if (statusCode == 200){
         if (context.mounted){
           // Pop twice so we can go back to dashboard when pressing the back arrow from the otw page
           // ignore: use_build_context_synchronously
@@ -269,7 +269,7 @@ class _MapManualSearchState extends State<MapManualSearch> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ErrorDialogBox(error_code: status_code, message: response["detail"]);
+              return ErrorDialogBox(errorCode: statusCode, message: response["detail"]);
             },
           );
         }

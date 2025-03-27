@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ErrorDialogBox extends StatefulWidget {
-  const ErrorDialogBox({super.key, this.error_code, this.message});
+  const ErrorDialogBox({super.key, this.errorCode, this.message});
 
-  final error_code;
+  final errorCode;
   final message;
 
   @override
@@ -15,7 +15,7 @@ class _ErrorDialogBoxState extends State<ErrorDialogBox> {
 @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("${widget.error_code}"),
+      title: Text("${widget.errorCode}"),
       content: Text('${widget.message}'),
       actions: <Widget>[
         TextButton(
