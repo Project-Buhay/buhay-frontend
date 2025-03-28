@@ -3,8 +3,8 @@ import 'dart:convert';
 
 class RequestApi {
   // Switch localhost:8000 to 10.0.2.2:8000 because of android emulator
-  var startURL = "http://10.0.2.2:8000";
-  // var startURL = "https://buhay-backend-production.up.railway.app";
+  // var startURL = "http://10.0.2.2:8000";
+  var startURL = "https://buhay-backend-v2-production.up.railway.app";
 
   Future<Map<String, dynamic>> getCoordinateNames(
       List<Map<String, dynamic>> body) async {
