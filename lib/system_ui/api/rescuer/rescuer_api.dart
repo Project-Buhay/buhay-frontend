@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class RescuerApi {
-  final String domainName = "10.0.2.2:8000";
-  // final String domainName = "buhay-backend-production.up.railway.app";
+  // final String domainName = "10.0.2.2:8000";
+  final String domainName = "buhay-backend-v2-production.up.railway.app";
   late final String startURL;
   late final String websocketUrl;
 
   RescuerApi() {
-    startURL = "http://$domainName";
-    websocketUrl = "ws://$domainName/ws";
-    // startURL = "https://$domainName";
-    // websocketUrl = "wss://$domainName/ws";
+    // startURL = "http://$domainName";
+    // websocketUrl = "ws://$domainName/ws";
+    startURL = "https://$domainName";
+    websocketUrl = "wss://$domainName/ws";
   }
 
   Future<List<Map<String, dynamic>>> testRoutes() async {
