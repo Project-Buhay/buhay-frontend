@@ -1,4 +1,5 @@
 import 'package:buhay/system_ui/controller/constituent/map_manual_search_controller.dart';
+import 'package:buhay/system_ui/presentation/constituent/error_dialog_box.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
@@ -230,30 +231,49 @@ class _MapManualSearchState extends State<MapManualSearch> {
           .mapResultsController.mapResultsApi
           .addRequest(request);
 
-      if (context.mounted) {
-        // Pop twice so we can go back to dashboard when pressing the back arrow from the otw page
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pop();
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pop();
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pop();
+      final statusCode = response["status_code"];
 
-        Navigator.push(
+      if (statusCode == 200){
+        if (context.mounted){
+          // Pop twice so we can go back to dashboard when pressing the back arrow from the otw page
           // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  MapDashboard(personID: mapManualSearchController.personID)),
-        );
-        Navigator.push(
+          Navigator.of(context).pop();
           // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(
-              builder: (context) => OnTheWayPage(
-                  requestId: response["request_id"],
-                  mapManualSearchController: mapManualSearchController)),
-        );
+          Navigator.of(context).pop();
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pop();
+
+          Navigator.push(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(
+                builder: (context) => MapDashboard(
+                    personID: mapManualSearchController.personID)),
+          );
+          Navigator.push(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(
+                builder: (context) => OnTheWayPage(
+                      requestId: response["request_id"],
+                      mapManualSearchController: mapManualSearchController,
+                    )),
+          );
+        }
+      }
+
+      else {
+        if (context.mounted){
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pop();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ErrorDialogBox(errorCode: statusCode, message: response["detail"]);
+            },
+          );
+        }
+
       }
     } catch (e) {
       await showDialog<AlertDialog>(
