@@ -32,7 +32,11 @@ class MapDashboardState extends State<MapDashboard> {
           title: Text('Project Buhay'),
           centerTitle: true,
           backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black)),
+          leading: IconButton(
+            icon: Icon(Icons.logout_outlined, color: Colors.black, textDirection: TextDirection.ltr,),
+            onPressed: () => Navigator.of(context).pop(),
+          ), 
+        ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

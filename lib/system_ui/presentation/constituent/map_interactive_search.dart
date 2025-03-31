@@ -40,6 +40,9 @@ class InteractiveSearchState extends State<InteractiveSearch> {
   // Initializes circleAnnotationManager for adding circles
   _onMapCreated(MapboxMap mapboxMap) async {
     this.mapboxMap = mapboxMap;
+    this.mapboxMap.setBounds(CameraBoundsOptions(
+      maxZoom: 18.5,
+    ));
     circleAnnotationManager =
         await mapboxMap.annotations.createCircleAnnotationManager();
     markerController = MarkerController(

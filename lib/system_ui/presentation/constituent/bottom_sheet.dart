@@ -6,7 +6,6 @@ import '../login/otw.dart';
 import '../../controller/constituent/map_marker_controller.dart';
 import '../../controller/rescuer/map_results_controller.dart';
 import '../../../features/map_error_dialog_box/presentation/map_error_dialog_box.dart';
-import 'package:async/async.dart';
 
 // Renamed to CustomBottomSheet as BottomSheet exists in flutter library
 class CustomBottomSheet extends StatefulWidget {
@@ -20,22 +19,21 @@ class CustomBottomSheet extends StatefulWidget {
 
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
   late MapResultsController mapResultsController;
-  late RestartableTimer timer;
+  bool _firstPress = false;
 
   @override
   void initState() {
     super.initState();
 
     mapResultsController = MapResultsController();
-    timer = RestartableTimer(Duration(milliseconds: 500), () {});
   }
 
 // Submit Route Function
   void _onSubmitRoute() async {
-    if (timer.isActive) {
-      timer.reset();
-    } else {
-      timer = RestartableTimer(Duration(milliseconds: 500), _submitAction);
+    // Change timer into an if firstpressed bool to decrease delays
+    if (!_firstPress){
+      _firstPress = true;
+      _submitAction();
     }
   }
 
@@ -43,6 +41,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
     // Checks if app has connection to server
     if (!(await mapResultsController.checkIfConnected())) {
       _showErrorDialog();
+      _firstPress = false;
       return;
     }
 
@@ -50,6 +49,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
       showDialog<AlertDialog>(
         // ignore: use_build_context_synchronously
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Sending Request...'),
@@ -87,6 +87,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                 message: "Select areas that are at least 15 meters apart");
           },
         );
+        _firstPress = false;
         return;
       }
 
@@ -163,6 +164,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
         },
       );
     }
+
+    _firstPress = false;
+
   }
 
   Future<void> _showErrorDialog() async {
@@ -213,7 +217,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                       child: Text(
                         widget.markerController?.startingPoint == null
                             ? "Select Starting Point"
-                            : "Select ${widget.markerController!.maxMarkers - widget.markerController!.markerCounter} End Points",
+                            : "${widget.markerController!.maxMarkers - widget.markerController!.markerCounter} End Points Remaining",
                         style: TextStyle(
                           fontSize: 21,
                           color: Colors.black,
@@ -250,10 +254,19 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                           ),
                         ),
                         child: Text(
-                          "Confirm",
+                          (widget.markerController?.startingPoint == null)
+                            ? "Starting Point Required" 
+                            : (widget.markerController?.endPoints.isEmpty ?? true)
+                            ? "Requires at least 1 endpoint"
+                            : "Confirm" ,
                           style: TextStyle(
                             fontSize: 18,
-                            color: Colors.white,
+                            color: (widget.markerController?.startingPoint ==
+                                    null ||
+                                (widget.markerController?.endPoints.isEmpty ??
+                                    true))
+                                ? Colors.red
+                                : Colors.white,
                           ),
                         ),
                       );
