@@ -32,6 +32,9 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
     mapManualSearchController = widget.mapManualSearchController;
     mapInteractiveSearchController = widget.mapInteractiveSearchController;
 
+    print(widget.response);
+    print(widget.response["locations"]);
+
     if (mapManualSearchController != null) {
       sendDataUsingManual();
     } else {
@@ -57,20 +60,52 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          title: Text('On the Way'),
+          title: Text('Request Summary'),
           centerTitle: true,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black)),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ListTile(
-              title: Text("Request ID: ${widget.requestId}"),
-            ),
-            Text(
-                "Rescuer is on the Way!\nPlease wait for the rescuer to arrive"),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Center(
+                  child: Text(
+                "Request ID: ${widget.requestId}",
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              )),
+              Center(
+                  child: Text(
+                "Rescuer is on the Way!",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              )),
+              if (widget.response["locations"] != null)
+                ...List<Widget>.from(
+                    widget.response["locations"].asMap().entries.map((entry) {
+                  int index = entry.key;
+                  var location = entry.value;
+                  return Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Location ${index + 1}:",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          location.toString(),
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  );
+                })),
+            ],
+          ),
         ),
       ),
     );
