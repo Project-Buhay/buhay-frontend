@@ -50,6 +50,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
       showDialog<AlertDialog>(
         // ignore: use_build_context_synchronously
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Sending Request...'),

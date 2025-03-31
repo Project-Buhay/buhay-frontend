@@ -45,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       showDialog<AlertDialog>(
         context: context,
+        barrierDismissible: false, // Disable dismissing dialog box to avoid popping login page
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Validating Credentials...'),
