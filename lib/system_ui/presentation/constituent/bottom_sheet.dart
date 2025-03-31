@@ -70,17 +70,37 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
           .markerController!.mapInteractiveSearchController
           .addRequestParsing();
 
+      var compareCoordinates = await widget
+          .markerController!.mapResultsController.mapResultsApi
+          .compareCoordinatesApi(request);
+
+      // print("Compare Coordinates: $compareCoordinates");
+
+      if (compareCoordinates["message"] == "false") {
+        Navigator.of(context).pop();
+        await showDialog<AlertDialog>(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (BuildContext context) {
+            return ErrorDialogBox(
+                errorCode: "Alert!",
+                message: "Select areas that are at least 15 meters apart");
+          },
+        );
+        return;
+      }
+
       // Call the api for addRequest, response stores the response of the call (can be used to debug)
       var response = await widget
           .markerController!.mapResultsController.mapResultsApi
           .addRequest(request);
 
       print("Request ID: ${response["request_id"]}");
-    
+
       final statusCode = response["status_code"];
 
-      if (statusCode == 200){
-        if (context.mounted){
+      if (statusCode == 200) {
+        if (context.mounted) {
           // Pop twice so we can go back to dashboard when pressing the back arrow from the otw page
           // ignore: use_build_context_synchronously
           Navigator.of(context).pop();
@@ -103,25 +123,23 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
             MaterialPageRoute(
                 builder: (context) => OnTheWayPage(
                       requestId: response["request_id"],
-                      mapInteractiveSearchController:
-                          widget.markerController!.mapInteractiveSearchController,
+                      mapInteractiveSearchController: widget
+                          .markerController!.mapInteractiveSearchController,
                     )),
           );
         }
-      }
-
-      else {
-        if (context.mounted){
+      } else {
+        if (context.mounted) {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pop();
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ErrorDialogBox(errorCode: statusCode, message: response["detail"]);
+              return ErrorDialogBox(
+                  errorCode: statusCode, message: response["detail"]);
             },
           );
         }
-
       }
 
       // ignore: unused_local_variable

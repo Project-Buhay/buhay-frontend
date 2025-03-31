@@ -110,6 +110,30 @@ class MapResultsAPI {
     return data;
   }
 
+  Future<Map<String, dynamic>> compareCoordinatesApi(AddRequest body) async {
+    print("compareCoordinates body: ${body.coordinates}");
+
+    final url = "$startURL/compare_coordinates";
+
+    final requestBody = json.encode({
+      'person_id': body.personID,
+      'coordinates': body.coordinates,
+    });
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: requestBody,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    // data includes detail if error else request_id
+    final data = json.decode(response.body);
+    data["status_code"] = response.statusCode;
+    return data;
+  }
+
   Future<void> saveRouteRequest(SaveRoute body) async {
     final url = "$startURL/save_route";
 
