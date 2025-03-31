@@ -2,7 +2,7 @@ import 'package:buhay/system_ui/presentation/constituent/error_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'map_dashboard.dart';
-import '../login/otw.dart';
+import 'otw.dart';
 import '../../controller/constituent/map_marker_controller.dart';
 import '../../controller/rescuer/map_results_controller.dart';
 import '../../../features/map_error_dialog_box/presentation/map_error_dialog_box.dart';
@@ -31,7 +31,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 // Submit Route Function
   void _onSubmitRoute() async {
     // Change timer into an if firstpressed bool to decrease delays
-    if (!_firstPress){
+    if (!_firstPress) {
       _firstPress = true;
       _submitAction();
     }
@@ -98,6 +98,18 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 
       print("Request ID: ${response["request_id"]}");
 
+      var convertCoordinatesRequest = await widget
+          .markerController!.mapInteractiveSearchController
+          .convertCoordinatesParsing();
+
+      print("Convert Coordinates Request: $convertCoordinatesRequest");
+
+      var convertCoordinatesResponse = await widget
+          .markerController!.mapResultsController.mapResultsApi
+          .getCoordinateNames(convertCoordinatesRequest);
+
+      print("Convert Coordinates Response: $convertCoordinatesResponse");
+
       final statusCode = response["status_code"];
 
       if (statusCode == 200) {
@@ -126,6 +138,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                       requestId: response["request_id"],
                       mapInteractiveSearchController: widget
                           .markerController!.mapInteractiveSearchController,
+                      response: convertCoordinatesResponse,
                     )),
           );
         }
@@ -166,7 +179,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
     }
 
     _firstPress = false;
-
   }
 
   Future<void> _showErrorDialog() async {
@@ -255,16 +267,18 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         ),
                         child: Text(
                           (widget.markerController?.startingPoint == null)
-                            ? "Starting Point Required" 
-                            : (widget.markerController?.endPoints.isEmpty ?? true)
-                            ? "Requires at least 1 endpoint"
-                            : "Confirm" ,
+                              ? "Starting Point Required"
+                              : (widget.markerController?.endPoints.isEmpty ??
+                                      true)
+                                  ? "Requires at least 1 endpoint"
+                                  : "Confirm",
                           style: TextStyle(
                             fontSize: 18,
                             color: (widget.markerController?.startingPoint ==
-                                    null ||
-                                (widget.markerController?.endPoints.isEmpty ??
-                                    true))
+                                        null ||
+                                    (widget.markerController?.endPoints
+                                            .isEmpty ??
+                                        true))
                                 ? Colors.red
                                 : Colors.white,
                           ),

@@ -105,7 +105,7 @@ class MapManualSearchController {
     return body;
   }
 
-  Future<ConvertCoordinates> convertCoordinatesParsing() async {
+  Future<List<Map<String, dynamic>>> convertCoordinatesParsing() async {
     List<List<double>> locationCoordinatesList = [];
 
     for (var locationData in locationDataList) {
@@ -118,14 +118,12 @@ class MapManualSearchController {
       [startMarkerPosition!.longitude, startMarkerPosition!.latitude],
     );
 
-    ConvertCoordinates body = ConvertCoordinates(
-      coordinates: locationCoordinatesList
-          .map((coords) => {
-                'coordinates': [coords[0], coords[1]]
-              })
-          .toList()
-          .cast<Map<String, List<double>>>(),
-    );
+    List<Map<String, dynamic>> body = locationCoordinatesList
+        .map((coords) => {
+              'coordinates': [coords[0], coords[1]]
+            })
+        .toList()
+        .cast<Map<String, List<double>>>();
 
     return body;
   }

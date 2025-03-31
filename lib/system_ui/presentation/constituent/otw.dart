@@ -7,11 +7,14 @@ class OnTheWayPage extends StatefulWidget {
   final int requestId;
   final MapManualSearchController? mapManualSearchController;
   final MapInteractiveSearchController? mapInteractiveSearchController;
-  const OnTheWayPage(
-      {super.key,
-      required this.requestId,
-      this.mapManualSearchController,
-      this.mapInteractiveSearchController});
+  final Map<String, dynamic> response;
+  const OnTheWayPage({
+    super.key,
+    required this.requestId,
+    this.mapManualSearchController,
+    this.mapInteractiveSearchController,
+    required this.response,
+  });
   @override
   State<OnTheWayPage> createState() => _OnTheWayPageState();
 }
@@ -61,7 +64,13 @@ class _OnTheWayPageState extends State<OnTheWayPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text("Rescuer is on the Way!")],
+          children: <Widget>[
+            ListTile(
+              title: Text("Request ID: ${widget.requestId}"),
+            ),
+            Text(
+                "Rescuer is on the Way!\nPlease wait for the rescuer to arrive"),
+          ],
         ),
       ),
     );

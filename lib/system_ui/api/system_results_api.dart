@@ -156,4 +156,26 @@ class MapResultsAPI {
       print("Route not saved");
     }
   }
+
+  Future<Map<String, dynamic>> getCoordinateNames(
+      List<Map<String, dynamic>> body) async {
+    final url = "$startURL/convert_coordinates";
+
+    final requestBody = json.encode(body);
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: requestBody,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data;
+    } else {
+      return {};
+    }
+  }
 }
