@@ -19,6 +19,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final FormController _controller = FormController();
   bool _firstPress = false;
+  bool _passwordVisible = false;
 
   @override
   void initState() {
@@ -195,8 +196,23 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 26),
                 FormBuilderTextField(
                   name: 'password',
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Password'),
+                  obscureText: !_passwordVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                            color: Colors.black,
+                            ),
+                          onPressed: () {
+                            setState(() {
+                                _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
+                    ),
                   validator: _controller.validatePassword(),
                 ),
                 SizedBox(height: 26),
