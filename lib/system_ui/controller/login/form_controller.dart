@@ -67,17 +67,20 @@ class FormController {
         final data = await loginApi.getUser(formData);
         if (data['access_control'] == 0) {
           // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).hideCurrentSnackBar(); // To avoid delayed snackbars
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Invalid Credentials')),
           );
         }
         return data;
       } else {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar(); // To avoid delayed snackbars
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please fill all required fields')),
         );
       }
     } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar(); // To avoid delayed snackbars
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please correct the errors in the form')),
       );
