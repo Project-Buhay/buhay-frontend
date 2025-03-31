@@ -6,7 +6,6 @@ import '../constituent/map_dashboard.dart';
 import '../rescuer/rescuer_dashboard.dart';
 import '../../../features/map_error_dialog_box/presentation/map_error_dialog_box.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:async/async.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({
@@ -19,20 +18,19 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final FormController _controller = FormController();
-  late RestartableTimer timer;
+  bool _firstPress = false;
 
   @override
   void initState() {
     super.initState();
-    timer = RestartableTimer(Duration(milliseconds: 500), () {});
   }
 
   // Submit Login Function
   void _onSubmitLogin() async {
-    if (timer.isActive) {
-      timer.reset();
-    } else {
-      timer = RestartableTimer(Duration(milliseconds: 500), _submitAction);
+    // Change timer into an if firstpressed bool to decrease delays
+    if (!_firstPress){
+      _firstPress = true;
+      _submitAction();
     }
   }
 
@@ -82,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                       )),
             );
           }
+          _firstPress = false;
           return;
         } else if (type == 2) {
           if (context.mounted) {
@@ -97,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                       )),
             );
           }
+          _firstPress = false;
           return;
         }
         else if (type == 3){
@@ -105,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.of(context).pop();
           }
           _onRedirect("Kindly use the WebApp version of Project Buhay");
+          _firstPress = false;
           return;
         }
       }
@@ -130,6 +131,9 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
     }
+
+    _firstPress = false;
+
   }
 
   Future<void> _showErrorDialog() async {

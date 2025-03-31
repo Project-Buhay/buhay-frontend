@@ -3,7 +3,6 @@ import 'package:buhay/system_ui/presentation/constituent/error_dialog_box.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:async/async.dart';
 
 import '../../../env/env.dart';
 import '../../../features/map_search/presentation/search.dart';
@@ -26,7 +25,7 @@ class _MapManualSearchState extends State<MapManualSearch> {
   String googleToken = "";
   late MapManualSearchController mapManualSearchController;
   late MapResultsController mapResultsController;
-  late RestartableTimer timer;
+  bool _firstPress = false;
 
   @override
   void initState() {
@@ -38,7 +37,6 @@ class _MapManualSearchState extends State<MapManualSearch> {
     mapResultsController = MapResultsController();
 
     mapResultsController.checkIfConnected();
-    timer = RestartableTimer(Duration(milliseconds: 500), () {});
   }
 
   @override
@@ -190,10 +188,10 @@ class _MapManualSearchState extends State<MapManualSearch> {
 
   // Submit Route Function
   void _onSubmitRoute() async {
-    if (timer.isActive) {
-      timer.reset();
-    } else {
-      timer = RestartableTimer(Duration(milliseconds: 500), _submitAction);
+    // Change timer into an if firstpressed bool to decrease delays
+    if (!_firstPress){
+      _firstPress = true;
+      _submitAction();
     }
   }
 
@@ -201,6 +199,7 @@ class _MapManualSearchState extends State<MapManualSearch> {
     try {
       if (!(await mapResultsController.checkIfConnected())) {
         _showErrorDialog();
+        _firstPress = true;
         return;
       }
 
@@ -243,6 +242,7 @@ class _MapManualSearchState extends State<MapManualSearch> {
                 message: "Select areas that are at least 15 meters apart");
           },
         );
+        _firstPress = true;
         return;
       }
 
@@ -313,6 +313,9 @@ class _MapManualSearchState extends State<MapManualSearch> {
         },
       );
     }
+
+    _firstPress = true;
+
   }
 
   Future<void> _showErrorDialog() async {
