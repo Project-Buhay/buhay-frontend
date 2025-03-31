@@ -8,7 +8,7 @@ import '../../../env/env.dart';
 import '../../../features/map_search/presentation/search.dart';
 import '../../../features/map_check_coordinates/presentation/check_coordinate_dialog_box.dart';
 import '../../controller/rescuer/map_results_controller.dart';
-import '../login/otw.dart';
+import 'otw.dart';
 import 'map_dashboard.dart';
 import '../../../features/map_error_dialog_box/presentation/map_error_dialog_box.dart';
 
@@ -189,7 +189,7 @@ class _MapManualSearchState extends State<MapManualSearch> {
   // Submit Route Function
   void _onSubmitRoute() async {
     // Change timer into an if firstpressed bool to decrease delays
-    if (!_firstPress){
+    if (!_firstPress) {
       _firstPress = true;
       _submitAction();
     }
@@ -251,6 +251,13 @@ class _MapManualSearchState extends State<MapManualSearch> {
           .mapResultsController.mapResultsApi
           .addRequest(request);
 
+      var convertCoordinatesRequest =
+          await mapManualSearchController.convertCoordinatesParsing();
+
+      var convertCoordinatesResponse = await mapManualSearchController
+          .mapResultsController.mapResultsApi
+          .getCoordinateNames(convertCoordinatesRequest);
+
       final statusCode = response["status_code"];
 
       if (statusCode == 200) {
@@ -277,6 +284,7 @@ class _MapManualSearchState extends State<MapManualSearch> {
                 builder: (context) => OnTheWayPage(
                       requestId: response["request_id"],
                       mapManualSearchController: mapManualSearchController,
+                      response: convertCoordinatesResponse,
                     )),
           );
         }
@@ -315,7 +323,6 @@ class _MapManualSearchState extends State<MapManualSearch> {
     }
 
     _firstPress = true;
-
   }
 
   Future<void> _showErrorDialog() async {
