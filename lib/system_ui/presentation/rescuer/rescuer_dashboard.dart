@@ -37,10 +37,26 @@ class RescuerDashboardState extends State<RescuerDashboard> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          title: Text('Project Buhay'),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black)),
+        title: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text('Project Buhay')),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              icon: Icon(
+                Icons.logout_outlined,
+                color: Colors.black,
+                textDirection: TextDirection.ltr,
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
