@@ -226,6 +226,26 @@ class _MapManualSearchState extends State<MapManualSearch> {
       // ignore: unused_local_variable
       var request = await mapManualSearchController.addRequestParsing();
 
+      var compareCoordinates = await mapManualSearchController
+          .mapResultsController.mapResultsApi
+          .compareCoordinatesApi(request);
+
+      // print("Compare Coordinates: $compareCoordinates");
+
+      if (compareCoordinates["message"] == "false") {
+        Navigator.of(context).pop();
+        await showDialog<AlertDialog>(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (BuildContext context) {
+            return ErrorDialogBox(
+                errorCode: "Alert!",
+                message: "Select areas that are at least 15 meters apart");
+          },
+        );
+        return;
+      }
+
       // Call the api for addRequest, response stores the response of the call (can be used to debug)
       var response = await mapManualSearchController
           .mapResultsController.mapResultsApi
@@ -233,8 +253,8 @@ class _MapManualSearchState extends State<MapManualSearch> {
 
       final statusCode = response["status_code"];
 
-      if (statusCode == 200){
-        if (context.mounted){
+      if (statusCode == 200) {
+        if (context.mounted) {
           // Pop twice so we can go back to dashboard when pressing the back arrow from the otw page
           // ignore: use_build_context_synchronously
           Navigator.of(context).pop();
@@ -247,8 +267,8 @@ class _MapManualSearchState extends State<MapManualSearch> {
             // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
-                builder: (context) => MapDashboard(
-                    personID: mapManualSearchController.personID)),
+                builder: (context) =>
+                    MapDashboard(personID: mapManualSearchController.personID)),
           );
           Navigator.push(
             // ignore: use_build_context_synchronously
@@ -260,20 +280,18 @@ class _MapManualSearchState extends State<MapManualSearch> {
                     )),
           );
         }
-      }
-
-      else {
-        if (context.mounted){
+      } else {
+        if (context.mounted) {
           // ignore: use_build_context_synchronously
           Navigator.of(context).pop();
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ErrorDialogBox(errorCode: statusCode, message: response["detail"]);
+              return ErrorDialogBox(
+                  errorCode: statusCode, message: response["detail"]);
             },
           );
         }
-
       }
     } catch (e) {
       await showDialog<AlertDialog>(
