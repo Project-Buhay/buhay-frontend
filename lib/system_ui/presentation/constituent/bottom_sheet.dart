@@ -217,7 +217,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                       child: Text(
                         widget.markerController?.startingPoint == null
                             ? "Select Starting Point"
-                            : "Select ${widget.markerController!.maxMarkers - widget.markerController!.markerCounter} End Points",
+                            : "${widget.markerController!.maxMarkers - widget.markerController!.markerCounter} End Points Remaining",
                         style: TextStyle(
                           fontSize: 21,
                           color: Colors.black,
@@ -254,10 +254,19 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                           ),
                         ),
                         child: Text(
-                          "Confirm",
+                          (widget.markerController?.startingPoint == null)
+                            ? "Starting Point Required" 
+                            : (widget.markerController?.endPoints.isEmpty ?? true)
+                            ? "Requires at least 1 endpoint"
+                            : "Confirm" ,
                           style: TextStyle(
                             fontSize: 18,
-                            color: Colors.white,
+                            color: (widget.markerController?.startingPoint ==
+                                    null ||
+                                (widget.markerController?.endPoints.isEmpty ??
+                                    true))
+                                ? Colors.red
+                                : Colors.white,
                           ),
                         ),
                       );
