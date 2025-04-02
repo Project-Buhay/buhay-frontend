@@ -79,133 +79,147 @@ class MapResultPageState extends State<MapResultPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Padding(
+                          padding: const EdgeInsets.only(top: 14.0),
+                          child: Text(
+                            "Select a row to view the route",
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold),
+                          )),
                       ...widget.rescuerController.routes.map((location) {
-                        return ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              // Left column: Coordinates
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Location ${widget.rescuerController.routes.indexOf(location) + 1}',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: "Start: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          TextSpan(
-                                            text:
-                                                // "${location['start'][0].toStringAsFixed(7)},${location['start'][1].toStringAsFixed(7)}\n",
-                                                "${location['start']}\n",
-                                          ),
-                                          TextSpan(
-                                            text: "End: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          TextSpan(
-                                            text:
-                                                // "${location['end'][0].toStringAsFixed(7)},${location['end'][1].toStringAsFixed(7)}\n",
-                                                "${location['end']}\n",
-                                          ),
-                                        ],
+                        return Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.grey, // Change color as needed
+                                width: 2.0, // Change width as needed
+                              ),
+                            ),
+                          ),
+                          child: ListTile(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // Left column: Coordinates
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Location ${widget.rescuerController.routes.indexOf(location) + 1}',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
+                                      Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: "Start: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            TextSpan(
+                                              text: "${location['start']}\n",
+                                            ),
+                                            TextSpan(
+                                              text: "End: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            TextSpan(
+                                              text: "${location['end']}\n",
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Right column: Distance
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Wrap the distance in a Column to separate the number and the unit
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${location['data']['route']['distanceKm'].toStringAsFixed(2)}", // Rounding to 2 decimal places
+                                          style: TextStyle(
+                                              fontSize: 26,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text("kilometers"),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ),
-                              // Right column: Distance
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Wrap the distance in a Column to separate the number and the unit
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "${location['data']['route']['distanceKm'].toStringAsFixed(2)}", // Rounding to 2 decimal places
-                                        style: TextStyle(
-                                            fontSize: 26,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text("kilometers"),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
+                            onTap: () async {
+                              systemController
+                                  .clearRoute(systemController.uniqueId);
+                              systemController.removeCircleAnnotation(
+                                  systemController.startMarkerId);
+                              systemController.removeCircleAnnotation(
+                                  systemController.endMarkerId);
+
+                              systemController.generateMarkerIds();
+
+                              await systemController.onSubmit(
+                                  Future.value(location['data']['geojson']));
+
+                              // Add circle annotations for start and end markers
+                              var access = location['data']['geojson']
+                                  ['features'][0]['geometry']['coordinates'];
+                              // print('access: $access');
+                              systemController.addCircleAnnotation(
+                                LatLng(
+                                    access[0][1],
+                                    // location['start'][0]),
+                                    access[0][0]),
+                                systemController.startMarkerId,
+                                Colors.red,
+                              );
+
+                              // get length of coordinates
+                              int length = access.length;
+                              // print('length: $length');
+
+                              systemController.addCircleAnnotation(
+                                LatLng(
+                                    access[length - 1][1],
+                                    // location['start'][0]),
+                                    access[length - 1][0]),
+                                systemController.endMarkerId,
+                                Colors.blue,
+                              );
+
+                              var midpointData =
+                                  systemController.calculateMidpoint(
+                                access[0][1],
+                                access[0][0],
+                                access[length - 1][1],
+                                access[length - 1][0],
+                              );
+
+                              systemController.flyOperation(
+                                  midpointData['midpoint'].longitude,
+                                  midpointData['midpoint'].latitude,
+                                  midpointData['zoom']);
+
+                              setState(() {});
+                            },
                           ),
-                          onTap: () async {
-                            systemController
-                                .clearRoute(systemController.uniqueId);
-                            systemController.removeCircleAnnotation(
-                                systemController.startMarkerId);
-                            systemController.removeCircleAnnotation(
-                                systemController.endMarkerId);
-
-                            systemController.generateMarkerIds();
-
-                            await systemController.onSubmit(
-                                Future.value(location['data']['geojson']));
-
-                            // Add circle annotations for start and end markers
-                            var access = location['data']['geojson']['features']
-                                [0]['geometry']['coordinates'];
-                            // print('access: $access');
-                            systemController.addCircleAnnotation(
-                              LatLng(
-                                  access[0][1],
-                                  // location['start'][0]),
-                                  access[0][0]),
-                              systemController.startMarkerId,
-                              Colors.red,
-                            );
-
-                            // get length of coordinates
-                            int length = access.length;
-                            // print('length: $length');
-
-                            systemController.addCircleAnnotation(
-                              LatLng(
-                                  access[length - 1][1],
-                                  // location['start'][0]),
-                                  access[length - 1][0]),
-                              systemController.endMarkerId,
-                              Colors.blue,
-                            );
-
-                            var midpointData =
-                                systemController.calculateMidpoint(
-                              access[0][1],
-                              access[0][0],
-                              access[length - 1][1],
-                              access[length - 1][0],
-                            );
-
-                            systemController.flyOperation(
-                                midpointData['midpoint'].longitude,
-                                midpointData['midpoint'].latitude,
-                                midpointData['zoom']);
-
-                            setState(() {});
-                          },
                         );
                       }),
                       // Add a button called finish rescue
                       Padding(
-                        padding: EdgeInsets.only(top: 2.0, bottom: 20.0),
+                        padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
