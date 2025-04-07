@@ -264,17 +264,21 @@ class MapResultPageState extends State<MapResultPage> {
       showDialog<AlertDialog>(
         // ignore: use_build_context_synchronously
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Finishing Rescue...'),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                LoadingAnimationWidget.discreteCircle(
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 100.0,
-                ),
-              ],
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+              title: const Text('Finishing Rescue...'),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  LoadingAnimationWidget.discreteCircle(
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 100.0,
+                  ),
+                ],
+              ),
             ),
           );
         },
