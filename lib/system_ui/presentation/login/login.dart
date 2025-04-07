@@ -46,16 +46,19 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         barrierDismissible: false, // Disable dismissing dialog box to avoid popping login page
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Validating Credentials...'),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                LoadingAnimationWidget.discreteCircle(
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 100.0,
-                ),
-              ],
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+              title: const Text('Validating Credentials...'),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  LoadingAnimationWidget.discreteCircle(
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 100.0,
+                  ),
+                ],
+              ),
             ),
           );
         },
