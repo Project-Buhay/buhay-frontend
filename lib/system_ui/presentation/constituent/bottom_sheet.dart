@@ -51,16 +51,19 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Sending Request...'),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                LoadingAnimationWidget.discreteCircle(
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 100.0,
-                ),
-              ],
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+              title: const Text('Sending Request...'),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  LoadingAnimationWidget.discreteCircle(
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 100.0,
+                  ),
+                ],
+              ),
             ),
           );
         },
