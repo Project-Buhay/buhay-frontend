@@ -108,15 +108,15 @@ class MapManualSearchController {
   Future<List<Map<String, dynamic>>> convertCoordinatesParsing() async {
     List<List<double>> locationCoordinatesList = [];
 
+    locationCoordinatesList.add(
+      [startMarkerPosition!.longitude, startMarkerPosition!.latitude],
+    );
+
     for (var locationData in locationDataList) {
       locationCoordinatesList.add(
         [locationData.location.longitude, locationData.location.latitude],
       );
     }
-
-    locationCoordinatesList.add(
-      [startMarkerPosition!.longitude, startMarkerPosition!.latitude],
-    );
 
     List<Map<String, dynamic>> body = locationCoordinatesList
         .map((coords) => {
@@ -131,15 +131,15 @@ class MapManualSearchController {
   Future<AddRequest> addRequestParsing() async {
     List<List<double>> locationCoordinatesList = [];
 
+    locationCoordinatesList.add(
+      [startMarkerPosition!.longitude, startMarkerPosition!.latitude],
+    );
+
     for (var locationData in locationDataList) {
       locationCoordinatesList.add(
         [locationData.location.longitude, locationData.location.latitude],
       );
     }
-
-    locationCoordinatesList.add(
-      [startMarkerPosition!.longitude, startMarkerPosition!.latitude],
-    );
 
     AddRequest body = AddRequest(
       personID: personID,
